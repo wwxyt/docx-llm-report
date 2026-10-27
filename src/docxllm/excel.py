@@ -29,9 +29,12 @@ def read_sheet(path: str | Path, sheet: str | None = None) -> tuple[list[str], l
     return headers, data
 
 
-def load_data(spec: DataSpec, base_path: str | Path) -> tuple[list[str], list[dict], list[dict]]:
-    """按配置读取并映射字段，返回 (表头, 原始行, 模版可用行)。"""
-    headers, rows = read_sheet(base_path, spec.sheet)
+def load_data(spec: DataSpec, excel_path: str | Path) -> tuple[list[str], list[dict], list[dict]]:
+    """按配置读取并映射字段，返回 (表头, 原始行, 模版可用行)。
+
+    excel_path 为已解析好的数据文件绝对路径（调用方用 cfg.resolve 得到）。
+    """
+    headers, rows = read_sheet(excel_path, spec.sheet)
     if spec.columns:
         missing = [c for c in spec.columns if c not in headers]
         if missing:
