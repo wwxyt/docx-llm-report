@@ -24,6 +24,8 @@ class DataSpec:
     file: str
     sheet: str | None = None
     rows_var: str = "rows"
+    # 分组维度（不必填，默认自动取第一个文本列，如"地区""品类"）
+    group_by: str | None = None
     # 键为 Excel 表头，值为模版里使用的字段名；为空则原样使用表头
     columns: dict[str, str] = field(default_factory=dict)
 
@@ -95,6 +97,7 @@ def load_config(path: str | Path) -> ReportConfig:
             file=data_raw["file"],
             sheet=data_raw.get("sheet"),
             rows_var=data_raw.get("rows_var", "rows"),
+            group_by=data_raw.get("group_by"),
             columns=dict(data_raw.get("columns") or {}),
         ),
         llm=LLMSpec(

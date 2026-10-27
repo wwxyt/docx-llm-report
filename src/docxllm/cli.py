@@ -22,6 +22,7 @@ data:
   file: examples/sample.xlsx
   sheet: 销售数据
   rows_var: rows            # 模版里循环用的变量名
+  group_by: 地区            # 分析的分组维度，省略则自动取第一个文本列
   columns:                  # Excel 表头 -> 模版字段名
     地区: region
     销售额（万元）: sales

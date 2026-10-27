@@ -4,8 +4,9 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from .analysis import analyze
 from .config import ReportConfig
-from .excel import load_data, summarize, to_markdown
+from .excel import load_data, to_markdown
 from .llm import chat_json
 from .prompt import build_messages, normalize
 from .render import build_context, render
@@ -44,7 +45,8 @@ def generate(
         content = mock_content(cfg, len(raw_rows))
         note = "由大模型生成（mock 模式，占位文案）"
     else:
-        messages = build_messages(cfg, to_markdown(headers, raw_rows), summarize(headers, raw_rows))
+        insight = analyze(headers, raw_rows, cfg.data.group_by)
+        messages = build_messages(cfg, to_markdown(headers, raw_rows), insight.text)
         content = normalize(chat_json(messages, model=cfg.llm.model or model, temperature=cfg.llm.temperature), cfg)
         note = f"由大模型生成 · {cfg.llm.model or model or os.getenv('LLM_MODEL', 'gpt-4o-mini')}"
 

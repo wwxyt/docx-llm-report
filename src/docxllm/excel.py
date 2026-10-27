@@ -54,26 +54,6 @@ def to_number(value) -> float | None:
         return None
 
 
-def summarize(headers: list[str], rows: list[dict]) -> str:
-    """为模型提供一份"算好"的数值摘要，避免它自己算错。"""
-    lines: list[str] = [f"数据共 {len(rows)} 行，字段：{'、'.join(headers)}。"]
-    for h in headers:
-        values = [to_number(r.get(h)) for r in rows]
-        nums = [v for v in values if v is not None]
-        if len(nums) < 2 or len(nums) < len(values) * 0.8:
-            continue
-        total = sum(nums)
-        idx_max = max(range(len(values)), key=lambda i: values[i] if values[i] is not None else float("-inf"))
-        idx_min = min(range(len(values)), key=lambda i: values[i] if values[i] is not None else float("inf"))
-        first_header = headers[0]
-        lines.append(
-            f"{h}：合计 {total:,.2f}，均值 {total / len(nums):,.2f}，"
-            f"最大 {nums and max(nums):,.2f}（{rows[idx_max].get(first_header)}），"
-            f"最小 {min(nums):,.2f}（{rows[idx_min].get(first_header)}）"
-        )
-    return "\n".join(lines)
-
-
 def to_markdown(headers: list[str], rows: list[dict]) -> str:
     lines = ["| " + " | ".join(headers) + " |",
              "| " + " | ".join("---" for _ in headers) + " |"]
