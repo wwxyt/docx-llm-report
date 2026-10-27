@@ -1,0 +1,37 @@
+# docx-llm-report 配置文件
+# 全部路径均相对本文件所在目录
+
+template: templates/report.docx
+
+data:
+  file: examples/sample.xlsx
+  sheet: 销售数据
+  rows_var: rows            # 模版里循环用的变量名
+  columns:                  # Excel 表头 -> 模版字段名
+    地区: region
+    销售额（万元）: sales
+    同比: yoy
+
+llm:
+  model: deepseek-chat      # 留空则读取环境变量 LLM_MODEL
+  temperature: 0.3
+  brief: 本期区域销售经营分析，面向管理层汇报。
+  language: 中文
+  tone: 正式书面语
+  sections:                 # 每个 section 都是一个模版变量
+    - var: title
+      desc: 报告标题，不超过 20 字。
+    - var: summary
+      desc: 总体情况，200-300 字，一段话，概括整体规模与结构。
+    - var: analysis
+      type: list            # list 会渲染成多段/多行
+      count: 3
+      desc: 趋势分析，从数据中提炼规律与异常。
+      item_desc: 每条 100-150 字，一条一个结论。
+    - var: conclusion
+      desc: 结论与建议，150-200 字，给出可执行的行动建议。
+
+meta:
+  period: auto              # auto = 当前年月，也可写死字符串
+  generated_at: auto
+  model_note: auto

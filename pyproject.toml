@@ -1,0 +1,36 @@
+[project]
+name = "docx-llm-report"
+version = "0.1.0"
+description = "用大模型撰写并填充 Word 报告的最小可用框架：Excel 数据 + Word 模版 → LLM 撰写叙述 → .docx"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "docx-llm-report contributors" }]
+keywords = ["docx", "word", "llm", "report", "template", "docxtpl", "excel"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Office/Business :: Office Suites",
+]
+dependencies = [
+    "docxtpl>=0.16",
+    "openpyxl>=3.1",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+docxllm = "docxllm.cli:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
