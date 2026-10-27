@@ -1,5 +1,10 @@
 # docx-llm-report
 
+[![CI](https://github.com/wwxyt/docx-llm-report/actions/workflows/ci.yml/badge.svg)](https://github.com/wwxyt/docx-llm-report/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-20%20passed-brightgreen.svg)](tests/)
+
 > 用大模型撰写并填充 Word 报告：**Excel 数据 + Word 模版 → LLM 写叙述 → 输出 .docx**
 
 很多「AI 生成报告」的项目最后交给你一个 Markdown 或 PDF，但真实业务里要的是一份**能改、能盖章、格式合规的 Word**。
@@ -8,6 +13,10 @@
 ```
 Excel / 数据表 ──①读取映射──> 结构化数据 ──②LLM(强制JSON)──> 文案字段 ──③docxtpl──> 报告.docx
 ```
+
+![示例输出](docs/preview.png)
+
+<sub>标题、编号章节、表格边框全部来自 Word 模版；表格数字来自 Excel；叙述文字由模型撰写。上图为示例文案。</sub>
 
 ## 它不做什么
 
@@ -30,7 +39,8 @@ Excel / 数据表 ──①读取映射──> 结构化数据 ──②LLM(强�
 ## 快速开始
 
 ```bash
-git clone <this-repo> && cd docx-llm-report
+git clone https://github.com/wwxyt/docx-llm-report
+cd docx-llm-report
 pip install -e .
 
 docxllm init              # 生成 report.yaml + 模版 + 示例数据
@@ -65,7 +75,7 @@ report.yaml ─┬─> template.docx （Jinja2 标签）
              └─> llm.sections   （要模型写的字段与要求）
                      │
                      ▼
-        读取 Excel → 列名映射 → 生成数据摘要（合计/极值）
+        读取 Excel → 列名映射 → 计算数据洞察（规模/占比/离群）
                      │
                      ▼
         Prompt(含摘要 + 明细表 + JSON Schema) → 模型 → JSON
@@ -191,6 +201,8 @@ src/docxllm/
 └── cli.py         # init / run / check
 tests/test_pipeline.py   # 10 个端到端用例
 tests/test_analysis.py   # 10 个数据分析用例
+docs/preview.png         # README 预览图
+.github/                 # CI（3.9/3.11/3.13）、Issue 与 PR 模板
 ```
 
 ## 测试
@@ -202,6 +214,17 @@ pytest -q          # 20 passed，不联网
 
 覆盖：mock 全链路出 docx、表格行数与内容、段落循环展开、列映射、缺列报错、JSON 三种脏格式解析、模版自检的正反例、CLI 端到端；
 以及列类型推断、比率列不求和、占比与 HHI、离群值检测、分组维度校验、洞察文本注入 prompt。
+
+CI 在 Python 3.9 / 3.11 / 3.13 上跑同一套用例，并额外执行 `docxllm init` → `check` → `run --mock` 的离线冒烟，确认产出的 docx 里确实有段落和表格。
+
+## 打包
+
+```bash
+python -m build            # 产出 dist/*.whl 与 *.tar.gz
+twine check dist/*         # 校验元数据
+```
+
+模块为纯 Python，无编译步骤，`pip install` 到任何 3.9+ 环境即可。
 
 ## FAQ
 
@@ -231,7 +254,13 @@ pytest -q          # 20 passed，不联网
 
 - [docxtpl](https://github.com/elapouya/python-docx-template)：本项目的渲染底座，Jinja2 语法进 docx
 - [STORM](https://github.com/stanford-oval/storm) / [GPT-Researcher](https://github.com/assafelovic/gpt-researcher)：内容生成更强，但输出不套模版，可作为「正文供应商」接进来
+- [report-forge](https://github.com/ellmos-ai/report-forge)：同样面向「数据 + 模版 → Word」，特点是 fail-closed 校验与 PII 匿名化，但不内置 LLM 客户端、不做数据分析
+
+## 贡献
+
+欢迎 Issue 与 PR，提之前请先看 [CONTRIBUTING.md](CONTRIBUTING.md)——里面写了三条设计红线（数字只从数据源来、依赖保持极薄、渲染层解耦）。
+版本变更见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## License
 
-MIT
+[MIT](LICENSE)

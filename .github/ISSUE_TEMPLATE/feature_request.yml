@@ -1,0 +1,38 @@
+name: 功能建议
+description: 提一个新能力，或指出当前设计不合理的地方
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你遇到的场景
+      description: 先说场景，再说方案。方案对不对取决于场景。
+      placeholder: 我们的报表是按月出，Excel 里是 12 个月的时间序列，现在只能整体汇总，写不出环比。
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 你希望它怎么工作
+      description: 命令行 / 配置项 / 输出效果，任选角度描述。
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 涉及模块
+      multiple: true
+      options:
+        - 数据分析（analysis.py）
+        - 提示词与约束（prompt.py / llm.py）
+        - 模版与渲染（template.py / render.py）
+        - 配置（config.py）
+        - 命令行（cli.py）
+        - 文档
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 你考虑过的替代做法
+      description: 比如换用别的库、在项目外自己预处理数据。说明为什么不合适，能省很多来回。

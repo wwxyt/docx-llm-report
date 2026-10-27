@@ -1,0 +1,90 @@
+name: Bug 报告
+description: 报告一个问题：渲染异常、数字不对、模版标签失效等
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。请尽量附上**可复现的最小输入**（模版片段、Excel 表头、report.yaml 相关段落），
+        否则很多问题只能靠猜。提交前请先跑一次 `docxllm check`，它通常能直接指出标签拼写问题。
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 现象
+      description: 实际发生了什么？与你的预期差在哪？
+      placeholder: 表格渲染成空白行，其余字段正常。
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 从干净目录开始，越具体越好。
+      value: |
+        1. `pip install -e .`
+        2. `docxllm init --dir demo`
+        3. 修改 report.yaml 的 xxx
+        4. `docxllm run --mock`
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 报错信息 / 日志
+      description: 完整堆栈优先。请**删掉 API Key**。
+      render: shell
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      description: 执行 `docxllm --version` 的结果
+      placeholder: docx-llm-report 0.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: 环境
+      description: Python 版本、操作系统、docxtpl 版本
+      placeholder: Python 3.11.7 / Windows 11 / docxtpl 0.19.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: 运行模式
+      options:
+        - --mock（未调用模型）
+        - 真实模型调用
+        - 两者都有
+    validations:
+      required: true
+
+  - type: dropdown
+    id: model
+    attributes:
+      label: 使用的模型（真实模式时）
+      options:
+        - 未使用模型
+        - OpenAI
+        - DeepSeek
+        - 通义千问
+        - 本地 vLLM / Ollama
+        - 其他（在环境一栏补充）
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 自查
+      options:
+        - label: 我已确认日志中不含 API Key、内网地址等敏感信息
+          required: true
+        - label: 我已阅读 README 的「三个必踩的坑」
+          required: true

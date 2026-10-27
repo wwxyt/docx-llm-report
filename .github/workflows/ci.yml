@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: test (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: 安装
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: 单元测试
+        run: pytest -q
+
+      - name: CLI 冒烟（init / check / run --mock，全程离线）
+        run: |
+          mkdir -p "$RUNNER_TEMP/demo"
+          cd "$RUNNER_TEMP/demo"
+          docxllm init
+          docxllm check
+          docxllm run --mock
+          test -f output/report.docx
+          python - <<'EOF'
+          from docx import Document
+          doc = Document("output/report.docx")
+          assert doc.paragraphs, "报告没有任何段落"
+          assert doc.tables, "报告没有表格"
+          print("段落数:", len(doc.paragraphs), "表格行数:", len(doc.tables[0].rows))
+          EOF
+
+  package:
+    name: build & twine check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 构建分发包
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build
+
+      - name: 元数据校验
+        run: twine check dist/*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/

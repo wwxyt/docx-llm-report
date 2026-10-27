@@ -4,14 +4,21 @@ version = "0.1.0"
 description = "用大模型撰写并填充 Word 报告的最小可用框架：Excel 数据 + Word 模版 → LLM 撰写叙述 → .docx"
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "MIT" }
-authors = [{ name = "docx-llm-report contributors" }]
-keywords = ["docx", "word", "llm", "report", "template", "docxtpl", "excel"]
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "wwxyt", email = "165013181+wwxyt@users.noreply.github.com" }]
+keywords = ["docx", "word", "llm", "report", "template", "docxtpl", "excel", "report-generation"]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Operating System :: OS Independent",
+    "Natural Language :: Chinese (Simplified)",
     "Topic :: Office/Business :: Office Suites",
+    "Topic :: Text Processing :: Markup",
 ]
 dependencies = [
     "docxtpl>=0.16",
@@ -20,13 +27,19 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0"]
+dev = ["pytest>=7.0", "build>=1.0", "twine>=4.0"]
+
+[project.urls]
+Homepage = "https://github.com/wwxyt/docx-llm-report"
+Repository = "https://github.com/wwxyt/docx-llm-report"
+Issues = "https://github.com/wwxyt/docx-llm-report/issues"
+Changelog = "https://github.com/wwxyt/docx-llm-report/blob/main/CHANGELOG.md"
 
 [project.scripts]
 docxllm = "docxllm.cli:main"
 
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
@@ -34,3 +47,4 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "-q"

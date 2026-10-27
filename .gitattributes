@@ -1,0 +1,8 @@
+# 统一换行，避免 Windows 与 macOS/Linux 之间的 diff 噪音
+* text=auto eol=lf
+
+# 二进制文件必须声明，否则 Git 可能把它们当文本做换行转换而损坏
+*.docx binary
+*.xlsx binary
+*.png  binary
+*.pdf  binary
