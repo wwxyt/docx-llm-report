@@ -25,7 +25,7 @@ def mock_content(cfg: ReportConfig, row_count: int) -> dict:
             out[s.var] = "示例分析报告"
         else:
             out[s.var] = (
-                f"（mock）本段为占位文字。本次共读取 {row_count} 行数据，"
+                f"（mock）{s.desc.rstrip('。.')}。本次共读取 {row_count} 行数据，"
                 "表格中的数字来自数据源本身，模型只负责撰写叙述部分。"
             )
     return out
